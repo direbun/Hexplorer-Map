@@ -1,0 +1,6 @@
+import {it,expect} from 'vitest';
+import {initialProject,normalizeProject,emptyExploration,planTravel,publicProjection,overlaySVG} from './core';
+import type {MapProject} from '../model';
+const map=():MapProject=>normalizeProject({...structuredClone(initialProject),grid:{...initialProject.grid,orientation:'square',size:100,offsetX:50,offsetY:50},regions:[{id:'trap',kind:'trap',name:'Pressure plates',habitat:'Forest',terrain:1,notes:'Secret DC',hexes:[{q:1,r:0},{q:3,r:0}]}]});
+it('keeps painted traps hidden even on previously explored floor',()=>{const p=map();expect(publicProjection(p,['1,0','3,0'],[]).hexes).toEqual([]);});
+it('reveals only the entered trap as a red skull and preserves discovery',()=>{const p=map(),state=planTravel(p,emptyExploration(),[{q:1,r:0}],0,{q:0,r:0}).state;const publicMap=publicProjection(p,state.visited,state.trapDiscovery);expect(publicMap.hexes).toHaveLength(1);expect(publicMap.hexes[0]).toMatchObject({q:1,r:0,habitat:'Trap',symbol:'Trap',color:'#df4d44'});expect(JSON.stringify(publicMap)).not.toContain('Secret DC');expect(overlaySVG(publicMap,{regions:true,pins:true,auras:false})).toContain('data-habitat-symbol');const after=planTravel(p,JSON.parse(JSON.stringify(state)),[{q:2,r:0}],0,{q:1,r:0}).state;expect(publicProjection(p,after.visited,after.trapDiscovery).hexes).toHaveLength(1);});

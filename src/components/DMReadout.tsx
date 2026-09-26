@@ -1,0 +1,7 @@
+import type { MapProject } from '../model';
+import { tokenRegion,terrainEntry } from '../projectSettings';
+import { nearbyMarkers } from '../proximity';
+export function DMReadout({project}:{project:MapProject}) {
+ const region=tokenRegion(project),nearby=nearbyMarkers(project);
+ return <section className="token-readout" aria-label="DM location panel"><strong>DM · PLAYER LOCATION</strong><div className="dm-region" role="status">{region?.name|| (project.playerToken?'Unassigned region':'Place the player token')}</div><div>Cell: {project.playerToken?`q ${project.playerToken.q}, r ${project.playerToken.r}`:'—'}</div><div>Habitat: <b>{region?.kind==='trap'?'Trap':region?.habitat??'—'}</b></div><div>Difficulty: <b>{region?`${terrainEntry(project,region.terrain)?.name??region.terrain} ${'•'.repeat(region.terrain)}`:'—'}</b></div>{region&&<div>Travel: {terrainEntry(project,region.terrain)?.days} days / cell</div>}<div className="nearby-pins"><strong>NEARBY {nearby.length>0?`· ${nearby.length}`:''}</strong><div aria-live="polite">{nearby.length?nearby.map(({marker,distance})=><details key={marker.id}><summary><b>{marker.title||'Unnamed pin'}</b><span>{distance} cell{distance===1?'':'es'}</span></summary>{marker.description&&<p>{marker.description}</p>}{marker.notes&&<p><b>GM:</b> {marker.notes}</p>}</details>):<small>{project.playerToken?'No pins within range.':'Move the token to check pin auras.'}</small>}</div></div></section>;
+}

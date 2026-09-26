@@ -1,0 +1,19 @@
+.wild-atlas-dock{position:fixed;top:8px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;z-index:60;max-width:calc(100vw - 400px);pointer-events:none}
+.wild-atlas-toolbar{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;background:#202b28ed;padding:5px;border:1px solid #9e8656;border-radius:5px;pointer-events:auto}
+.wild-atlas-toolbar button{width:auto;white-space:nowrap;color:#eadfc3;background:#273832;border:1px solid #697864;font-size:12px;padding:2px 8px}
+.wild-atlas-editor{position:fixed;inset:4vh 3vw;z-index:110;background:#202825;border:1px solid #bea16b;border-radius:6px;display:flex;flex-direction:column;box-shadow:0 8px 45px #0009}
+.wild-atlas-editor[hidden]{display:none}
+.wild-atlas-windowbar{display:flex;gap:8px;align-items:center;padding:8px;color:#f1e5c7;min-height:42px}
+.wild-atlas-windowbar b{flex:1}.wild-atlas-windowbar button{width:auto;color:#f1e5c7;background:#34443c;padding:2px 15px}
+.wild-atlas-editor iframe{border:0;flex:1;min-height:0;width:100%;background:#202825}
+.wild-atlas-overlay{position:fixed;z-index:1;pointer-events:none;overflow:hidden}.wild-atlas-overlay img{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;max-width:none;border:0}
+.wild-atlas-readout{max-width:700px;max-height:150px;overflow:auto;background:#202b28f2;color:#efe4c9;padding:6px 12px;border:1px solid #9e8656;border-radius:5px;font-size:13px;pointer-events:auto}
+.wild-atlas-readout h3{font-size:15px;color:#dbc18c}.wild-atlas-readout p{margin:8px 0}
+.wild-atlas-overlay[hidden],.wild-atlas-readout[hidden]{display:none}
+.wild-atlas-dock[hidden],.wild-atlas-toolbar button[hidden]{display:none!important}
+.wild-atlas-toolbar button.is-active{background:#b49a5f;color:#171e18;border-color:#e7cd92;box-shadow:inset 0 0 0 1px #e7cd9255}
+.wild-atlas-toolbar button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.wild-atlas-readout section{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}.wild-atlas-readout h3,.wild-atlas-readout p{margin:2px 0}
+@media(max-width:900px){.wild-atlas-dock{max-width:95vw;top:5px}}
+
+[data-wild-atlas-config]{border-top:1px solid var(--color-border-light-primary,#665f50);margin-top:16px;padding-top:12px}[data-wild-atlas-config] .hint{font-size:12px;line-height:1.4;text-align:left}
