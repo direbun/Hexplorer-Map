@@ -1,0 +1,26 @@
+{
+    "id":  "wild-atlas",
+    "title":  "Wild Atlas",
+    "description":  "Hex and square region editor, persistent exploration, Foundry roll tables, and private GM trap and travel reminders.",
+    "version":  "0.2.2",
+    "authors":  [
+                    {
+                        "name":  "Wild Atlas"
+                    }
+                ],
+    "compatibility":  {
+                          "minimum":  "13",
+                          "maximum":  "14"
+                      },
+    "esmodules":  [
+                      "scripts/module.js"
+                  ],
+    "styles":  [
+                   "styles/module.css"
+               ],
+    "socket":  false,
+    "url":  "https://github.com/direbun/Hexplorer-Map",
+    "manifest":  "https://github.com/direbun/Hexplorer-Map/releases/latest/download/module.json",
+    "download":  "https://github.com/direbun/Hexplorer-Map/releases/download/v0.2.2/wild-atlas-0.2.2.zip",
+    "bugs":  "https://github.com/direbun/Hexplorer-Map/issues"
+}

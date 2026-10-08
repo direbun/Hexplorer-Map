@@ -1,91 +1,106 @@
-# Wild Atlas
+# Wild Atlas for Foundry
 
-A local hex and square map editor with a Foundry VTT module for exploration, regions and dungeon traps. No account, backend, or database. All runtime assets are bundled; imported images stay in the browser and saved project JSON.
+The installable module is in **wild-atlas/**. It is a development build (0.2.2), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
 
-## Downloads and Foundry installation
+## Install from GitHub Releases
 
-Get the ready-to-use packages from [GitHub Releases](https://github.com/direbun/Hexplorer-Map/releases/latest). The automatic GitHub **Source code** ZIP is for development; use the attached release downloads to run the application.
+In Foundry Setup → Add-on Modules → Install Module, use:
 
-- **Foundry:** in Setup → Add-on Modules → Install Module, paste this Manifest URL:
-  `https://github.com/direbun/Hexplorer-Map/releases/latest/download/module.json`
-- **Windows editor:** download `wild-atlas-editor-0.2.0-windows.zip`, extract it, and double-click **Start Wild Atlas.vbs**. Node.js 22+ must be installed; the Foundry module does not need Node.js installed separately.
+https://github.com/direbun/Hexplorer-Map/releases/latest/download/module.json
 
-Enable Wild Atlas in your world. On a scene, open Configure → Basics and enable **Wild Atlas exploration scene** at the bottom. See the [module guide](foundry-module/README.md) for tracked tokens, roll tables, traps and shortcuts.
+Alternatively download the wild-atlas ZIP from the release and follow the manual steps below. These URLs become available after the maintainer publishes the release assets.
 
-Targets Foundry 13–14. Live multiplayer and Foundry 14 verification remain incomplete. Enabled scenes show the full background by disabling Token Vision and Fog Exploration, restoring their prior settings when disabled. This also applies to square dungeon scenes. Overlays do not participate in walls, lighting, roofs or level occlusion.
+## Install — no command prompt
 
-For maintainers: [manual GitHub upload and release steps](PUBLISHING.md).
+1. In Foundry Setup, open your **User Data** directory using Foundry's folder shortcut.
+2. Open its **Data/modules** folder (if the shortcut opens Data directly, just open modules).
+3. Copy the entire **wild-atlas** folder from here into modules. The result must be `Data/modules/wild-atlas/module.json`.
+4. Restart Foundry, open a test world, and enable **Wild Atlas** under Manage Modules.
+5. Open a scene with a **Square, Hexagonal Rows or Columns** grid. Right-click the scene → **Configure**, then enable **Wild Atlas exploration scene** on the Basics tab. Controls appear only on enabled scenes. Existing 0.1.0 exploration scenes remain enabled.
 
-## Open the editor (Windows)
+No Node.js, npm, CMD, or separate web server is required to use the packaged module. The editor runs inside Foundry. Hexplorer is not a dependency and none of its code is redistributed. Turn Hexplorer off on the test scene to avoid competing exploration actions.
 
-Double-click **Start Wild Atlas.vbs** in this folder. It starts the editor silently and opens your default browser. No CMD or PowerShell window is needed. Opening it again reuses the running server.
+## Hex and square maps
 
-Save your project before closing the browser. To shut down the background server, double-click **Stop Wild Atlas.vbs**. You can create a Windows shortcut to the Start file and place that shortcut on your desktop.
+The editor has **Hex / Square** buttons at the top of the left sidebar, plus an immediate size preview. In square mode the size is the full cell width in pixels; in hex mode it is the radius. Import an image, choose Square and adjust cell width/offsets to align dungeon tiles before creating a scene. Use **Foundry → Create new scene from map** to create the matching square scene. Existing square Foundry scenes load with their exact grid geometry.
 
-Download and extract the Windows editor ZIP from Releases, and install Node.js 22 or newer separately. The launcher uses the included production build and Node.js on your PATH. Keep the launcher, `launcher` folder and `dist` folder together. The editor runs at `http://127.0.0.1:4178` and does not require internet access.
+Painting, region borders, table rolls, discovery, per-cell encounters, pins, region alerts and exports work in both modes. Square regions connect across edges. Square-radius alerts count diagonal steps as one cell; radius 1 covers a 3×3 area. A radius-0 pin is suitable for a trap on one square. A movement path only triggers cells it enters, not squares touched at a corner.
 
-## Development only
+Changing grid shape retains region cell indices and changes their drawn layout. Undo restores the previous shape. It does not convert an existing Foundry scene in place: create a new scene from the preview to preserve existing walls/tokens. Grid shape and size are saved in project JSON.
 
-```sh
-npm ci
-npm run dev
-```
+The scene checkbox is located at the **bottom of the Basics content tab**, below standard scene settings.
 
-Open the localhost address printed by Vite. `npm run build` creates `dist`; `npm test` runs geometry tests.
+## Paint trap squares
 
-## Workflow
+Choose **Square**, then **Paint traps** at the top of the editor. Name the trap and click or drag to paint its squares. Separate squares are allowed in the same trap group. The DM sees each square tinted red with a skull; players see each individual trap only after entering it, and it stays revealed afterward. A new trap on an already-explored floor cell still waits for entry. Use the Foundry encounter settings on the selected trap to add a private DC reminder.
 
-### Region workshop and nearby pins
+## First map
 
-The sidebar is split into **Regions**, **Pins**, **Map**, **View** and **Export**. Import backgrounds and configure Foundry under Map; appearance and token controls are under View.
+Open Wild Atlas. The current scene image and hex grid load automatically. Use the Regions and Pins tabs as in the standalone editor, then click **Save to scene**.
 
-In Regions, **New + roll all** creates an empty region with a fresh generator draft. Give it a name in the always-visible name field, then **Apply & paint** and draw its hexes. These controls remain at the top while you scroll. Click the region selector to search a bounded list by name or habitat; a large region list does not push the generator down the page. Encounter, feature and manual region properties expand only when needed.
+For an existing Wild Atlas JSON, use **Open project** inside the editor, apply **Map → Foundry alignment** if needed, then **Foundry → Create new scene from map**. This creates a separate aligned scene and uploads an embedded background into `worlds/<world-id>/wild-atlas/`. Close the old editor and open Wild Atlas on the new scene. It does not reposition tokens or walls in an existing scene.
 
-In Pins, click **Place special pin**, then click the map. Set its name, notes and **Aura radius (hexes)**. New pins default to a 3-hex aura and GM-only visibility; existing saved markers keep alerts off until enabled. Radius 0 means the pin's own hex. The selected aura can be previewed as a dashed hex boundary and never appears in image exports. Click a pin to edit it or drag it to move. Text labels remain available in this tab too.
+New scenes use grid opacity 0, token vision off and fog exploration off, so the original image is visible before exploration. Enabled hexploration scenes automatically disable Token Vision and Fog Exploration, including existing scenes when the GM opens them. The previous values are saved and restored when hexploration is disabled. This ensures players see the background without needing an owned vision token. Set grid opacity to 0 yourself on existing scenes if you want no native grid lines. Leave background rotation at 0 and scale at 1. Legacy hex grids are not supported. Changing scene dimensions/grid after painting requires realignment or a new scene.
 
-The bottom-right DM panel displays the current region name and all enabled pins within range, sorted by hex distance. Expand a nearby pin to read its description and GM notes. Alerts work across region boundaries, with regions hidden, and for GM-only pins. Pins stay anchored to image pixels; their occupied hex and aura are recalculated if the grid changes. Names, aura radii and alert switches are included in saved project JSON; pin edits/movement are undoable.
+## Exploration
 
-### Match a Foundry VTT scene
+Select the party token on the Foundry canvas. Open or restore the editor and click **Foundry → Use selected Foundry token for exploration**. Minimize the editor to select or move tokens. The normal Player Token inside the editor remains a planning/reference tool; it does not move Foundry tokens.
 
-Open **Foundry VTT alignment** below Map & grid. Choose one of the four hex types and a whole-number Foundry pixel size (minimum 50), then click **Apply Foundry alignment**. This changes the editor grid in one undoable step; existing region coordinates follow that grid. The background is not resized. If you already painted regions, inspect their placement after applying.
+Only tracked tokens reveal overlays. The origin hex is not revealed merely by designating a token: move into a hex to discover it. Each entered hex retains its colour, habitat symbol and difficulty dots for all players. Crossing part of a region does not reveal the rest. Only public pins/labels inside discovered hexes are published. A GM must be connected to process discovery and reminders.
 
-The panel lists the exact grid type, size, original scene dimensions, zero padding and background offsets for the aligned configuration. Copy or download the settings. Use a new modern Foundry scene (13/14), choose the same background image, and enter those values. Grid distance and units do not affect pixel alignment. Keep background scale 1 and rotation 0. Create a fresh scene for old pre-v10 legacy hex grids.
+Actual passed movement waypoints are followed in order, including intermediate cells. Teleport/displace steps only discover their destination. Retracing a route can trigger entry-based encounters again. The token centre determines its hex; a large token's full footprint is not explored. First-discovery and daily limits are shared across the party; “day” uses Foundry world time / 86,400 seconds.
 
-**Player PNG for Foundry** and **GM PNG for Foundry** always export at original resolution without a baked hex grid, regardless of normal export size settings; let Foundry draw the grid. GM layers follow the editor visibility controls. Changing the regular grid controls can invalidate alignment, which the panel detects. Reapply alignment before exporting again. Altering padding or scene dimensions in an already detailed Foundry scene can displace its walls/tokens; use a duplicate first.
+## Tables and encounters
 
-The conversion was checked against the locally installed Foundry 13.351 core for all four grid types and several sizes. Optional developer check: `node launcher/verify-foundry.mjs "PATH_TO_FOUNDRY/common/grid/hexagonal.mjs"` (requires Node 24 and your own Foundry installation).
+In **Foundry**, select a world or visible compendium RollTable for each generator, or paste its UUID. Blank means the built-in editor table. The normal Roll buttons then use those choices without public chat messages or consuming table results.
 
-### During a game
+- Habitat results: an exact name from the editor's enabled habitats (case-insensitive). Set colour/symbol in the editor tables.
+- Terrain: an enabled difficulty's name or a number from 1 to 4.
+- Size: a positive integer.
+- Encounter/feature: result text. HTML is treated as text rather than executed.
 
-- Use **Open project** in the header to load a previously saved JSON map, then **Player Token** to click its current hex. You can also drag the blue P token in any tool mode. The bottom-right panel shows its habitat, difficulty, travel time and region; unassigned hexes show a dash.
-- **Save project** saves the embedded background, regions, token position, custom tables and the new view settings together. Existing project JSON files still load. Save before refreshing or closing the browser.
-- **View & game session** has background opacity, region colour opacity and a **Show regions** switch. Hiding regions removes colours, outlines, symbols and selection highlights while keeping the token readout active. Turn off the hex grid separately for a clean base map.
-- Each habitat has a colour; one through four dots progress from pale to dark. Edit the base colours under **Edit all roll tables & colours**.
-- All five tables have a form editor. Habitat names, colours, symbols and roll ranges are editable. Difficulty names and days per hex are editable for each dot count. Encounter rows can optionally roll twice and combine. Size uses d12 and feature uses d100. Table changes apply on **Save all tables** and are stored in the project; cancel discards them.
-- Token and its readout are play aids and do not appear in exported images. Player exports omit all region colours and other region overlays.
+Unknown or disabled mapped habitats/difficulties produce a visible error, not a silent reroll. Use an appropriate regional Foundry table to limit its results. If a table returns multiple encounter results, their text is combined; the first returned result supplies the configured rule. Nested table results should be configured in the table that directly supplies the encounter if result IDs differ.
 
-1. Import a PNG, JPEG or WebP. The workspace adopts its native resolution.
-2. Adjust grid orientation, radius and offsets. Coordinates remain axial when the grid changes.
-3. Create a region; click or drag to paint. Erase with the Erase tool or right mouse button. Disconnected additions and splitting removals require an explicit override when continuity is enabled.
-4. Edit habitat and terrain, or roll draft results and apply them. Place Symbol moves the single region symbol to a member hex; symbols can also be dragged.
-5. Add markers or labels and edit their details in the sidebar. GM-only items are excluded from player exports.
-6. Save project JSON regularly. It includes the original image; there is no automatic persistence. Import Project JSON restores it.
-7. Choose export layers and export the GM or Player image. Canvas is used only for final image flattening. PNG defaults to original resolution; JPEG/WebP and scale/quality settings are available.
+Encounter rules can apply to the selected region, a specific q,r hex, or an encounter table result. A rolled result rule is copied when you Apply the draft; editing the table rule later does not retroactively alter old regions. Specific hex rules override region defaults, including a disabled rule that deliberately suppresses an encounter on that hex.
 
-Ctrl+Z undoes; Ctrl+Y or Ctrl+Shift+Z redoes. Text fields retain native text editing shortcuts. Painting is undoable per hex.
+Configure DC/check/on-failure or on-success, or percentage chance, and a repeat policy. Movement sends one GM-only chat message listing each applicable entered hex and its encounter. Checks are reminders, not system-specific automatic skill rolls. Pins support either a hex-radius aura or **Region alert**, which covers the region containing the pin. Chat alerts fire only when entering the area, including entries along an intermediate route, and rearm after leaving. They are tracked separately for each exploration token. The DM readout continues showing nearby pins while inside without repeating pin chat. The GM panel also reports the destination region.
 
-## Structure
+## GM controls
 
-- `src/model.ts`: project and region types
-- `src/hex.ts`: axial conversion, adjacency, components and boundary edges
-- `src/hex.test.ts`: orientation, offsets, neighbor edges, holes and connectivity tests
-- `src/data/tables.ts`: habitat, terrain and encounter generators
-- `src/components/MapView.tsx`: SVG map and pointer interaction
-- `src/components/Symbol.tsx`: twelve monochrome SVG symbols
-- `src/export.ts`: SVG serialization and offscreen raster export
-- `src/App.tsx`: editor state, history and sidebar
+Toolbar buttons and remappable Configure Controls bindings:
 
-The size and feature tables start with placeholder entries. Size entries use numeric names for hex counts. All tables validate full die coverage without overlaps. Habitat and difficulty changes affect both the map legend and generator.
+| Shortcut | Action |
+|---|---|
+| Alt+W | Open/restore editor |
+| Alt+R | Toggle GM region overlays |
+| Alt+P | Toggle GM pins/labels |
+| Alt+A | Toggle GM pin auras |
+| Alt+V | Switch DM / Player view |
+| Alt+S | Toggle habitat symbols/difficulty dots (also available to players) |
 
-Very large images or very dense grids may be slow; export is limited to 100 megapixels. Grid adjustments reposition all axial region coordinates intentionally. Markers and labels use image-pixel coordinates. Pan/zoom and export visibility settings are session UI state, not part of the saved project.
+Buttons show On/Off states and the current DM/Player view. The compact DM readout sits below the controls at the top centre. Strong black outlines mark actual region boundaries; unexplored boundary geometry is not disclosed to players. Shortcuts also work inside the embedded editor except while typing in fields. These preferences are client-specific and never reset exploration. Player preview changes map overlays; it does not impersonate player vision or permissions. **Untrack token** stops tracking selected canvas tokens. The editor's Foundry tab offers a confirmed discovery reset which retains all authored map data.
 
+## Saving and privacy
+
+The complete project, encounter rules, revision and discovery history are saved in a GM-owned Journal Entry named **Wild Atlas · scene name · GM data**, with a text page named **Wild Atlas data**. Keep this entry and page private and do not edit their generated JSON manually. The scene contains only the explored public map projection. Chat reminders whisper to GM recipients. This uses Foundry document permissions; it is not encrypted storage.
+
+Use **Save to scene** for world persistence, **Save project** for JSON backup, and Foundry world backups before module upgrades. JSON from a scene can reference its Foundry background URL; for a portable standalone backup, import/embed the background image before exporting JSON. Saving from a second stale editor is rejected to avoid overwriting another GM's edits. Exploration writes are serialized through the elected active GM.
+
+## Development
+
+From the editor project root: `npm run build:foundry`. This rebuilds the iframe editor and shared core into this module folder. `npm test` covers existing editor behaviour plus movement paths, discovery, per-hex overrides, private/public projection and encounter reminders. `npm run build` builds the standalone editor independently.
+
+### Live verification still required
+
+Use a test world with separate GM and player browser sessions. Check row/column odd/even grids; waypoint moves, interrupted moves and teleports; multiple tracked tokens and multiple GMs; reconnect persistence; no-GM behaviour; private journal/chat permissions; image alignment under zoom/pan; token visibility below the overlay; and Foundry 14 multi-level scenes. The current overlay is a transparent HTML/SVG layer above the canvas, so it does not participate in Foundry lighting, roofs or level occlusion. Use a simple single-level wilderness scene for this first build.
+
+
+## Movable control panel
+
+Hold the right mouse button anywhere on the combined controls/location panel and drag it. Position is saved in this browser per world and user and kept within the window. Left-click icons to toggle regions, symbols, pins, auras and player preview; gold icons are active and hover labels describe their state. Wild Atlas opens the editor. The GM location and nearby-pin readout lives below the icons in the same panel. Players receive only their own symbol control, without the GM readout.
+
+## Group actor tracking
+
+Scene Configure → Basics → Wild Atlas group actor UUID accepts a world actor UUID (Actor.ID). Place one token for that actor on the scene. This becomes the only tracked token, overriding individual explorer flags. If multiple tokens use that actor, only the first scene token is tracked. Clearing the UUID restores individual-token tracking. Location, cell, habitat, terrain difficulty and nearby pins update on scene load and token changes, without needing an exploration move first. Unmapped cells show unassigned values.
+
+Close now hides the editor immediately and preserves unsaved edits in the current browser session, like Minimize. Reopen with Wild Atlas. Save to scene before refreshing or leaving the world.
