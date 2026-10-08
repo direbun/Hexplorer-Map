@@ -1,6 +1,6 @@
 # Wild Atlas for Foundry
 
-The installable module is in **wild-atlas/**. It is a development build (0.2.2), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
+The installable module is in **wild-atlas/**. It is a development build (0.2.3), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
 
 ## Install from GitHub Releases
 
@@ -104,3 +104,5 @@ Hold the right mouse button anywhere on the combined controls/location panel and
 Scene Configure → Basics → Wild Atlas group actor UUID accepts a world actor UUID (Actor.ID). Place one token for that actor on the scene. This becomes the only tracked token, overriding individual explorer flags. If multiple tokens use that actor, only the first scene token is tracked. Clearing the UUID restores individual-token tracking. Location, cell, habitat, terrain difficulty and nearby pins update on scene load and token changes, without needing an exploration move first. Unmapped cells show unassigned values.
 
 Close now hides the editor immediately and preserves unsaved edits in the current browser session, like Minimize. Reopen with Wild Atlas. Save to scene before refreshing or leaving the world.
+
+Version 0.2.3 uses versioned runtime filenames to avoid mixed cached updates. The panel displays its running version. Right-drag the panel or left-drag its header; Reset position restores the top-centre position.
