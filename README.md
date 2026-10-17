@@ -1,6 +1,6 @@
 # Wild Atlas for Foundry
 
-The installable module is in **wild-atlas/**. It is a development build (0.2.3), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
+The installable module is in **wild-atlas/**. It is a development build (0.3.0), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
 
 ## Install from GitHub Releases
 
@@ -106,3 +106,13 @@ Scene Configure → Basics → Wild Atlas group actor UUID accepts a world actor
 Close now hides the editor immediately and preserves unsaved edits in the current browser session, like Minimize. Reopen with Wild Atlas. Save to scene before refreshing or leaving the world.
 
 Version 0.2.3 uses versioned runtime filenames to avoid mixed cached updates. The panel displays its running version. Right-drag the panel or left-drag its header; Reset position restores the top-centre position.
+
+## Travel time and automatic encounter tables (0.3.0)
+
+Open the editor → Foundry → Travel time & random encounters. Enable time and/or encounter rolls, then configure each of the four difficulty levels with minutes per departed tile, a percentage chance per entered tile, and a world/compendium RollTable or UUID. Save to scene. Both features default off on existing maps.
+
+Leaving a three-dot tile for a one-dot tile charges the three-dot minutes. Multi-cell routes charge each tile left, excluding the final destination until it is left. Each entered tile independently rolls 1d100 against its difficulty's chance and rolls that level's table on success. Revisits can trigger again. Unassigned cells have no cost or chance. Teleport/displace segments skip these new time costs and random encounters (existing discovery/reminder behaviour remains).
+
+Time advances the shared Foundry world clock using game.time.advance(seconds), the integration documented by Simple Timekeeping: https://wiki.theripper93.com/premium/simple-timekeeping#gametimeadvancedelta-options . Minutes are 60 seconds. No separate calendar is maintained. A GM must be connected; the elected GM processes movement, including player movement of tracked tokens. Other time-advancing modules can add their own costs, so avoid configuring the same travel charge twice. Combat movement is not automatically exempt; disable travel charging for scenes where you do not want it.
+
+Random encounter results and travel totals are GM-only chat messages. Table rolls do not consume results or publish table cards. Existing region/DC reminders remain independent. The map's existing terrain day labels do not configure these new minute costs. Live Simple Timekeeping integration still requires verification in your game.
