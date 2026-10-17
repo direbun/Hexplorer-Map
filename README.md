@@ -1,6 +1,6 @@
 # Wild Atlas for Foundry
 
-The installable module is in **wild-atlas/**. It is a development build (0.3.0), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
+The installable module is in **wild-atlas/**. It is a development build (0.3.1), targeting Foundry 13 and 14. The installed 13.351 source was used to check API integration. It has not yet been verified in a live multiplayer Foundry world, so the manifest intentionally does not claim a verified version.
 
 ## Install from GitHub Releases
 
@@ -107,7 +107,7 @@ Close now hides the editor immediately and preserves unsaved edits in the curren
 
 Version 0.2.3 uses versioned runtime filenames to avoid mixed cached updates. The panel displays its running version. Right-drag the panel or left-drag its header; Reset position restores the top-centre position.
 
-## Travel time and automatic encounter tables (0.3.0)
+## Travel time and automatic encounter tables (0.3.1)
 
 Open the editor → Foundry → Travel time & random encounters. Enable time and/or encounter rolls, then configure each of the four difficulty levels with minutes per departed tile, a percentage chance per entered tile, and a world/compendium RollTable or UUID. Save to scene. Both features default off on existing maps.
 
@@ -116,3 +116,9 @@ Leaving a three-dot tile for a one-dot tile charges the three-dot minutes. Multi
 Time advances the shared Foundry world clock using game.time.advance(seconds), the integration documented by Simple Timekeeping: https://wiki.theripper93.com/premium/simple-timekeeping#gametimeadvancedelta-options . Minutes are 60 seconds. No separate calendar is maintained. A GM must be connected; the elected GM processes movement, including player movement of tracked tokens. Other time-advancing modules can add their own costs, so avoid configuring the same travel charge twice. Combat movement is not automatically exempt; disable travel charging for scenes where you do not want it.
 
 Random encounter results and travel totals are GM-only chat messages. Table rolls do not consume results or publish table cards. Existing region/DC reminders remain independent. The map's existing terrain day labels do not configure these new minute costs. Live Simple Timekeeping integration still requires verification in your game.
+
+## Loading and creating scenes (0.3.1)
+
+Use Load current scene in the editor header to reload the saved project/background for the scene this editor belongs to. Confirm replacement; Undo can recover the previous editor contents. Initial-load failures now show a Retry button. If you switched scenes, open Wild Atlas on the new scene.
+
+Create new scene from map now aligns a copy of your grid to Foundry integer pixels, saves the map, views the new scene and opens its own editor automatically. Save to scene then targets the new scene. The original editor data is preserved. Creation failures show a Foundry error and do not switch away from the original scene. If a scene was created before its initial save failed, it remains available for inspection.
